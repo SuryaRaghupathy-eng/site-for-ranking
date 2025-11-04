@@ -8,6 +8,7 @@ import Landing from "@/pages/Landing";
 import Tool from "@/pages/Tool";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
+import VerifyEmail from "@/pages/VerifyEmail";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/tool" component={Tool} />
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
+      <Route path="/verify-email" component={VerifyEmail} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,10 +11,12 @@ export default function Signup() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [, setLocation] = useLocation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Signup attempt", { firstName, lastName, email, password });
+    setLocation(`/verify-email?email=${encodeURIComponent(email)}`);
   };
 
   return (
