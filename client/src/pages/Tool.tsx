@@ -120,7 +120,7 @@ export default function Tool() {
   };
 
   const onContactSubmit = (data: InsertContactSubmission) => {
-    contactMutation.mutate(data);
+    setLocation("/login");
   };
 
   return (
@@ -366,10 +366,9 @@ export default function Tool() {
 
                   <div className="flex justify-center md:justify-start">
                     <Button
-                      type="button"
+                      type="submit"
                       size="lg"
                       data-testid="button-submit-contact"
-                      onClick={() => setLocation("/login")}
                       className="w-full md:w-auto font-semibold"
                     >
                       Get Free Rankings
