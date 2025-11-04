@@ -33,6 +33,7 @@ const rankTrackingFormSchema = insertRankTrackingRequestSchema.extend({
 
 const contactFormSchema = insertContactSubmissionSchema.extend({
   name: z.string().min(1, "Name is required"),
+  email: z.string().min(1, "Email is required").email("Please enter a valid email"),
 });
 
 export default function Tool() {
