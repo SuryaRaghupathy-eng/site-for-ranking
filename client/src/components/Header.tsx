@@ -34,10 +34,10 @@ export default function Header() {
         
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <Button variant="ghost" size="sm" data-testid="button-login">
+          <Button variant="ghost" size="sm" onClick={() => setLocation("/login")} data-testid="button-login">
             Login
           </Button>
-          <Button size="sm" onClick={() => setLocation("/tool")} data-testid="button-try-free">
+          <Button size="sm" onClick={() => setLocation("/login")} data-testid="button-try-free">
             Try for Free
           </Button>
         </div>
