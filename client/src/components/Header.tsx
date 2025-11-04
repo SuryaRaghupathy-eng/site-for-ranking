@@ -37,7 +37,7 @@ export default function Header() {
           <Button variant="ghost" size="sm" onClick={() => setLocation("/login")} data-testid="button-login">
             Login
           </Button>
-          <Button size="sm" onClick={() => setLocation("/login")} data-testid="button-try-free">
+          <Button size="sm" onClick={() => setLocation("/tool")} data-testid="button-try-free">
             Try for Free
           </Button>
         </div>

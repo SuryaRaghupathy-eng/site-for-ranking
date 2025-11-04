@@ -54,7 +54,7 @@ export default function Hero() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-base" onClick={() => setLocation("/login")} data-testid="button-get-started">
+            <Button size="lg" className="text-base" onClick={() => setLocation("/tool")} data-testid="button-get-started">
               Get Started Free
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
