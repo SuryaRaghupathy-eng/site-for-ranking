@@ -1,0 +1,16 @@
+export const locations = [
+  { code: "us", name: "United States", displayName: "United States (US)" },
+  { code: "uk", name: "United Kingdom", displayName: "United Kingdom (UK)" },
+  { code: "ca", name: "Canada", displayName: "Canada (CA)" },
+  { code: "au", name: "Australia", displayName: "Australia (AU)" },
+  { code: "de", name: "Germany", displayName: "Germany (DE)" },
+  { code: "fr", name: "France", displayName: "France (FR)" },
+  { code: "es", name: "Spain", displayName: "Spain (ES)" },
+  { code: "it", name: "Italy", displayName: "Italy (IT)" },
+  { code: "nl", name: "Netherlands", displayName: "Netherlands (NL)" },
+  { code: "br", name: "Brazil", displayName: "Brazil (BR)" },
+  { code: "mx", name: "Mexico", displayName: "Mexico (MX)" },
+  { code: "in", name: "India", displayName: "India (IN)" },
+  { code: "jp", name: "Japan", displayName: "Japan (JP)" },
+  { code: "sg", name: "Singapore", displayName: "Singapore (SG)" },
+];
