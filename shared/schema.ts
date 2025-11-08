@@ -1,12 +1,17 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, boolean, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
   password: text("password").notNull(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  isVerified: boolean("is_verified").notNull().default(false),
+  verificationToken: text("verification_token"),
+  verifiedAt: timestamp("verified_at"),
 });
 
 export const rankTrackingRequests = pgTable("rank_tracking_requests", {
@@ -27,8 +32,10 @@ export const contactSubmissions = pgTable("contact_submissions", {
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
+  email: true,
   password: true,
+  firstName: true,
+  lastName: true,
 });
 
 export const insertRankTrackingRequestSchema = createInsertSchema(rankTrackingRequests).omit({
