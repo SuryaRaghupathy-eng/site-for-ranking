@@ -42,8 +42,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       if (!emailSent) {
-        return res.status(500).json({ 
-          error: "User created but failed to send verification email. Please contact support." 
+        console.warn(`Email not sent for user ${email}. Verification token: ${verificationToken}`);
+        return res.status(201).json({ 
+          message: "Account created successfully. Please check your email to verify your account. (Email service unavailable - check server logs for verification token)",
+          email: user.email,
+          verificationToken: process.env.NODE_ENV === "development" ? verificationToken : undefined
         });
       }
 

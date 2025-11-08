@@ -1,10 +1,8 @@
 import { Resend } from 'resend';
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY environment variable is not set');
-}
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY 
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 interface SendVerificationEmailParams {
   to: string;
@@ -17,6 +15,11 @@ export async function sendVerificationEmail({
   firstName,
   verificationToken,
 }: SendVerificationEmailParams): Promise<boolean> {
+  if (!resend) {
+    console.error('RESEND_API_KEY is not set. Email will not be sent.');
+    return false;
+  }
+
   try {
     const verificationUrl = `${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000'}/verify?token=${verificationToken}`;
     
