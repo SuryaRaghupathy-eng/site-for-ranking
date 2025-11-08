@@ -1,20 +1,60 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff } from "lucide-react";
-import { Link } from "wouter";
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const [error, setError] = useState("");
+
+  const loginMutation = useMutation({
+    mutationFn: async (data: { email: string; password: string }) => {
+      const response = await apiRequest("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || "Login failed");
+      }
+      
+      return result;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      toast({
+        title: "Login successful!",
+        description: `Welcome back, ${data.user.firstName}!`,
+      });
+      setLocation("/dashboard");
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+      toast({
+        title: "Login failed",
+        description: err.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt", { email, password, rememberMe });
+    setError("");
+    loginMutation.mutate({ email, password });
   };
 
   return (
@@ -44,6 +84,12 @@ export default function Login() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="flex items-center gap-2 p-3 rounded-md bg-destructive/10 text-destructive" data-testid="text-error">
+              <AlertCircle className="w-4 h-4" />
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground">
@@ -118,9 +164,10 @@ export default function Login() {
             type="submit"
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             size="lg"
+            disabled={loginMutation.isPending}
             data-testid="button-signin"
           >
-            Sign in
+            {loginMutation.isPending ? "Signing in..." : "Sign in"}
           </Button>
         </form>
       </div>

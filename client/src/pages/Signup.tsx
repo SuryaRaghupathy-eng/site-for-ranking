@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,11 +15,45 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const [error, setError] = useState("");
+
+  const signupMutation = useMutation({
+    mutationFn: async (data: { email: string; password: string; firstName: string; lastName: string }) => {
+      const response = await apiRequest("/api/auth/signup", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || "Signup failed");
+      }
+      
+      return result;
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Account created successfully!",
+        description: data.message,
+      });
+      setLocation(`/verify-email?email=${encodeURIComponent(email)}`);
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+      toast({
+        title: "Signup failed",
+        description: err.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Signup attempt", { firstName, lastName, email, password });
-    setLocation(`/verify-email?email=${encodeURIComponent(email)}`);
+    setError("");
+    signupMutation.mutate({ email, password, firstName, lastName });
   };
 
   return (
@@ -43,6 +80,12 @@ export default function Signup() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="flex items-center gap-2 p-3 rounded-md bg-destructive/10 text-destructive" data-testid="text-error">
+              <AlertCircle className="w-4 h-4" />
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
           <div className="space-y-4">
             <div className="space-y-2">
               <Label className="text-foreground">
@@ -123,9 +166,10 @@ export default function Signup() {
             type="submit"
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             size="lg"
+            disabled={signupMutation.isPending}
             data-testid="button-create-account"
           >
-            Create account
+            {signupMutation.isPending ? "Creating account..." : "Create account"}
           </Button>
 
           <div className="text-center text-sm text-muted-foreground">

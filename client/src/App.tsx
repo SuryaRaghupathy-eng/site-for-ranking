@@ -9,6 +9,7 @@ import Tool from "@/pages/Tool";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import VerifyEmail from "@/pages/VerifyEmail";
+import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -19,6 +20,8 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
       <Route path="/verify-email" component={VerifyEmail} />
+      <Route path="/verify" component={VerifyEmail} />
+      <Route path="/dashboard" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );
